@@ -99,6 +99,8 @@ impl<T: fmt::Display> fmt::Display for MyWrapper<T>
 
 fn main()
 {
+    // let a = [0u8;1_000_000_000];
+    let a = Box::new([0u8;1_000_000_000]);
     println!("just test");
 }
 
@@ -128,6 +130,12 @@ mod tests {
     }
 
     // 测试2：MyWrapper 自动解引用功能
+    // Box的解引用行为似乎不依赖deref trait而是编译器魔法
+    // let mut p = Box::new(old_data);
+    // drop(*p);
+    // *p = new_data;
+    // 这里的*p直接操作内存而测试中的*w是*(w.deref())
+    // 如果是自定义类型，drop移动了值后再去借引用会报错
     #[test]
     fn test_my_wrapper_deref() {
         // 测试整数
@@ -147,4 +155,5 @@ mod tests {
         
         println!("✅ MyWrapper 自动解引用测试通过");
     }
+
 }
